@@ -1,0 +1,728 @@
+1.
+
+clear
+syms u v
+x(u,v)= u - (u^3)/3 + u * v^2;
+y(u,v)= v - (v^3)/3 + v * u^2;
+z(u,v)= u^2 - v^2;
+fsurf(x(u,v),y(u,v),z(u,v),[-25 25 -25 25]);
+hold on;
+u0=10;v0=15;
+P=[x(u0,v0) y(u0,v0) z(u0,v0)];
+plot3(P(1), P(2), P(3), 'r*');
+fplot3(x(u,v0),y(u,v0),z(u,v0));
+fplot3(x(u0,v),y(u0,v),z(u0,v));
+
+uxd(u)=diff(x(u,v0),u);
+uyd(u)=diff(y(u,v0),u);
+uzd(u)=diff(z(u,v0),u);
+v1=[uxd(u0) uyd(u0) uzd(u0)];
+
+vxd(v)=diff(x(u0,v),v);
+vyd(v)=diff(y(u0,v),v);
+vzd(v)=diff(z(u0,v),v);
+v2=[vxd(v0) vyd(v0) vzd(v0)];
+
+n=cross(v1,v2);
+quiver3(P(1),P(2),P(3),n(1),n(2),n(3))
+axis equal;
+
+2.
+
+clear
+syms x y
+f(x,y)=sqrt(1 - x^2 - 0.5 * y^2);
+fsurf(f)
+axis equal; hold on;
+x0=0.5;
+y0=0.2;
+plot3(x0,y0,f(x0,y0),'*', MarkerSize=10);
+
+3.
+
+clear
+syms x y
+f(x,y)=sin(x) + cos(y)/x;
+fsurf(f,[0.1 5 -6 6]);
+axis equal; hold on;
+fimplicit(f,[0.1 5 -6 6],'r',LineWidth=4);
+
+4.
+
+clear
+syms x y z;
+f(x,y,z)=x+y-z;
+g(x,y,z)=x-2*y+3*z-4;
+h(x,y,z)=2*x-0.5*y+4*z+2;
+fimplicit3(f,'g');
+axis equal; hold on;
+fimplicit3(h,'y');
+fimplicit3(g,'r');
+
+5.
+
+clear
+px=[0 0];py=[0 1];pz=[0 1];
+rx=[1 1];ry=[0 1];rz=[1 0];
+
+syms u v
+
+xp(u)=(1-u)*px(1)+u*px(2);
+yp(u)=(1-u)*py(1)+u*py(2);
+zp(u)=(1-u)*pz(1)+u*pz(2);
+
+fplot3(xp,yp,zp, [0 1]);
+axis equal; hold on;
+
+xr(u)=(1-u)*rx(1)+u*rx(2);
+yr(u)=(1-u)*ry(1)+u*ry(2);
+zr(u)=(1-u)*rz(1)+u*rz(2);
+
+fplot3(xr,yr,zr, [0 1]);
+
+fx(u,v)=(1-v)*xp(u) + v*xr(u);
+fy(u,v)=(1-v)*yp(u) + v*yr(u);
+fz(u,v)=(1-v)*zp(u) + v*zr(u);
+fsurf(fx,fy,fz,[0 1]);
+
+6. ,11.
+
+clear
+px=[-1 4 6 10]; py=[-2 0 -2 2];
+t0=-1;t1=0;t2=2;t3=3;
+plot(px, py, "*");
+axis equal; axis([-2 12 -4 6]); hold on;
+syms a0 a1 a2 a3 t;
+x(t)= a3*t^3 + a2* t^2 + a1 * t + a0;
+eq=[x(t0)==px(1);...
+    x(t1)==px(2);...
+    x(t2)==px(3);...
+    x(t3)==px(4)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)= m.a3*t^3 + m.a2* t^2 + m.a1 * t + m.a0;
+
+y(t)= a3*t^3 + a2* t^2 + a1 * t + a0;
+eq=[y(t0)==py(1);...
+    y(t1)==py(2);...
+    y(t2)==py(3);...
+    y(t3)==py(4)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)= m.a3*t^3 + m.a2* t^2 + m.a1 * t + m.a0;
+
+fplot(x(t),y(t),[t0 t3]);
+
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+quiver(px(3),py(3),xd(2),yd(2))
+
+7. ,8.
+
+clear
+px=[-2 6 10]; py=[-2 -2 2];
+v=[6 -4];
+plot(px,py,"--*");
+axis equal; hold on;
+t0=0;t1=1;t2=1.5;
+quiver(px(1),py(1),v(1),v(2));
+
+syms a0 a1 a2 a3 t
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd=diff(x,t);
+eq=[x(t0)==px(1);...
+    x(t1)==px(2);...
+    x(t2)==px(3);...
+    xd(t0)==v(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)= m.a3 * t^3 + m.a2 * t^2 + m.a1 * t + m.a0;
+
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+yd=diff(y,t);
+eq=[y(t0)==py(1);...
+    y(t1)==py(2);...
+    y(t2)==py(3);...
+    yd(t0)==v(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)= m.a3 * t^3 + m.a2 * t^2 + m.a1 * t + m.a0;
+
+fplot(x(t),y(t),[t0 t2]);
+
+8.
+
+clear
+clear
+px=[-2 6 10]; py=[-2 -2 2];
+v=[6 -4];
+plot(px,py,"--*");
+axis equal; hold on;
+t0=0;t1=1;t2=1.5;
+quiver(px(1),py(1),v(1),v(2));
+
+syms a0 a1 a2 a3 t
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd=diff(x,t);
+eq=[x(t0)==px(1);...
+    x(t1)==px(2);...
+    x(t2)==px(3);...
+    xd(t0)==v(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)= m.a3 * t^3 + m.a2 * t^2 + m.a1 * t + m.a0;
+
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+yd=diff(y,t);
+eq=[y(t0)==py(1);...
+    y(t1)==py(2);...
+    y(t2)==py(3);...
+    yd(t0)==v(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)= m.a3 * t^3 + m.a2 * t^2 + m.a1 * t + m.a0;
+
+fplot(x(t),y(t),[t0 t2]);
+
+rx=[px(3) 14]; ry=[py(3) -1];
+plot(rx,ry,'--*');
+v1=[2 -3];
+quiver(rx(2), ry(2), v1(1), v1(2));
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+v0=[xd(t2) yd(t2)];
+quiver(rx(1), ry(1), v0(1), v0(2));
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd=diff(x,t);
+eq=[x(t0)==rx(1);...
+    x(t1)==rx(2);...
+    xd(t0)==v0(1);...
+    xd(t1)==v1(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)= m.a3 * t^3 + m.a2 * t^2 + m.a1 * t + m.a0;
+
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+yd=diff(y,t);
+eq=[y(t0)==ry(1);...
+    y(t1)==ry(2);...
+    yd(t0)==v0(2);...
+    yd(t1)==v1(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)= m.a3 * t^3 + m.a2 * t^2 + m.a1 * t + m.a0;
+
+fplot(x(t),y(t),[t0 t1]);
+
+9. ,10.
+
+clear
+px=[-1 6]; py=[-2 -2];
+v1=[6 -4]; v2=[4,4];
+t0=0;t1=1;
+plot(px, py, "*");
+axis equal; hold on;
+quiver(px(1),py(1),v1(1),v1(2));
+quiver(px(2),py(2),v2(1),v2(2));
+
+syms t a0 a1 a2 a3
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+
+eq=[x(t0)==px(1);...
+    x(t1)==px(2);...
+    xd(t0)==v1(1);...
+    xd(t1)==v2(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==py(1);...
+    y(t1)==py(2);...
+    yd(t0)==v1(2);...
+    yd(t1)==v2(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t1]);
+
+10.
+
+clear
+px=[-1 6]; py=[-2 -2];
+v1=[6 -4]; v2=[4 4];
+t0=0;t1=1;
+plot(px, py, "*");
+axis equal; hold on;
+quiver(px(1),py(1),v1(1),v1(2));
+quiver(px(2),py(2),v2(1),v2(2));
+
+syms t a0 a1 a2 a3
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+
+eq=[x(t0)==px(1);...
+    x(t1)==px(2);...
+    xd(t0)==v1(1);...
+    xd(t1)==v2(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==py(1);...
+    y(t1)==py(2);...
+    yd(t0)==v1(2);...
+    yd(t1)==v2(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t1]);
+
+%2. görbe
+rx=[6 14]; ry=[-2 -4];
+v3=[3 0];
+t0=0;t2=2;
+
+plot(rx, ry, "*"); 
+quiver(rx(2),ry(2),v3(1),v3(2));
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+
+eq=[x(t0)==rx(1);...
+    x(t2)==rx(2);...
+    xd(t0)==v2(1);...
+    xd(t2)==v3(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==ry(1);...
+    y(t2)==ry(2);...
+    yd(t0)==v2(2);...
+    yd(t2)==v3(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t2]);
+
+11. ,12.
+
+clear
+px=[-1 4 6 10]; py=[-2 0 -2 2];
+t0=-1;t1=0;t2=2;t3=3;
+plot(px, py, "*");
+axis equal; axis([-2 12 -4 6]); hold on;
+syms a0 a1 a2 a3 t;
+x(t)= a3*t^3 + a2* t^2 + a1 * t + a0;
+eq=[x(t0)==px(1);...
+    x(t1)==px(2);...
+    x(t2)==px(3);...
+    x(t3)==px(4)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)= m.a3*t^3 + m.a2* t^2 + m.a1 * t + m.a0;
+
+y(t)= a3*t^3 + a2* t^2 + a1 * t + a0;
+eq=[y(t0)==py(1);...
+    y(t1)==py(2);...
+    y(t2)==py(3);...
+    y(t3)==py(4)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)= m.a3*t^3 + m.a2* t^2 + m.a1 * t + m.a0;
+
+fplot(x(t),y(t),[t0 t3]);
+
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+quiver(px(3),py(3),xd(2),yd(2))
+
+%2. görbe
+rx=[10 14]; ry=[2 -4];
+v2=[3 0];
+plot(rx, ry, "*");
+quiver(rx(2),ry(2),v2(1),v2(2));
+t0=-1;t1=1;
+
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+k=3;
+v1=[k*xd(t3) k*yd(t3)];
+quiver(rx(1),ry(1),v1(1),v1(2));
+
+syms t a0 a1 a2 a3
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+
+eq=[x(t0)==rx(1);...
+    x(t1)==rx(2);...
+    xd(t0)==v1(1);...
+    xd(t1)==v2(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==ry(1);...
+    y(t1)==ry(2);...
+    yd(t0)==v1(2);...
+    yd(t1)==v2(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t1]);
+
+12.
+
+clear
+clear
+px=[-1 4 6 10]; py=[-2 0 -2 2];
+t0=-1;t1=0;t2=2;t3=3;
+plot(px, py, "*");
+axis equal; axis([-2 12 -4 6]); hold on;
+syms a0 a1 a2 a3 t;
+x(t)= a3*t^3 + a2* t^2 + a1 * t + a0;
+eq=[x(t0)==px(1);...
+    x(t1)==px(2);...
+    x(t2)==px(3);...
+    x(t3)==px(4)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)= m.a3*t^3 + m.a2* t^2 + m.a1 * t + m.a0;
+
+y(t)= a3*t^3 + a2* t^2 + a1 * t + a0;
+eq=[y(t0)==py(1);...
+    y(t1)==py(2);...
+    y(t2)==py(3);...
+    y(t3)==py(4)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)= m.a3*t^3 + m.a2* t^2 + m.a1 * t + m.a0;
+
+fplot(x(t),y(t),[t0 t3]);
+
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+quiver(px(3),py(3),xd(2),yd(2))
+
+%2. görbe
+rx=[10 14]; ry=[2 -4];
+v2=[3 0];
+plot(rx, ry, "*");
+quiver(rx(2),ry(2),v2(1),v2(2));
+t0=-1;t1=1;
+
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+k=3;
+v1=[k*xd(t3) k*yd(t3)];
+quiver(rx(1),ry(1),v1(1),v1(2));
+
+syms t a0 a1 a2 a3
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+
+eq=[x(t0)==rx(1);...
+    x(t1)==rx(2);...
+    xd(t0)==v1(1);...
+    xd(t1)==v2(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==ry(1);...
+    y(t1)==ry(2);...
+    yd(t0)==v1(2);...
+    yd(t1)==v2(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t1]);
+
+%3. görbe
+t0=-2;t1=0;t3=3;
+qx=[rx(2) 22 24]; qy=[ry(2) 2 0];
+plot(qx,qy,"*");
+v3=v2;
+
+syms t a0 a1 a2 a3
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd(t)=diff(x,t);
+yd(t)=diff(y,t);
+
+eq=[x(t0)==qx(1);...
+    x(t1)==qx(2);...
+    x(t3)==qx(3);...
+    xd(t0)==v3(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==qy(1);...
+    y(t1)==qy(2);...
+    y(t3)==qy(3);...
+    yd(t0)==v3(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0], [m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t3]);
+
+13. ,20
+
+clear
+px=[10 20 40 50 20];py=[20 40 40 20 10];
+plot(px,py,'*');
+axis equal; axis([5 55 5 45]); hold on;
+t0=0; t1=1; t2=2; t3=3; t4=4;
+
+14. 15, 16 ,17 ,21
+
+clear
+px=[10 20 40 50 20];py=[20 40 40 20 10];
+plot(px,py,'*');
+axis equal; axis([5 55 5 45]); hold on;
+syms t;
+n=4;
+x(t)=t*0;
+y(t)=t*0;
+for i=0:n
+    bin(t)= nchoosek(n,i) * t^i * (1-t)^(n-i);
+    x(t)=x(t)+px(i+1)*bin(t);
+    y(t)=y(t)+py(i+1)*bin(t);
+end
+fplot(x,y,[0 1])
+
+v0=[n*(px(2)-px(1)) n*(py(2)-py(1))];
+v1=[n*(px(5)-px(4)) n*(py(5)-py(4))];
+quiver(px(1),py(1),v0(1),v0(2));
+quiver(px(5),py(5),v1(1),v1(2));
+
+16.
+
+clear
+px=[10 20 40 50 20];py=[20 40 40 20 10];
+plot(px,py,'*');
+axis equal; axis([-20 55 5 45]); hold on;
+syms t
+n=4;
+x(t)=t*0;
+y(t)=t*0;
+for i=0:n
+    bin(t)= nchoosek(n,i) * t^i * (1-t)^(n-i);
+    x(t)=x(t)+px(i+1)*bin(t);
+    y(t)=y(t)+py(i+1)*bin(t);
+end
+fplot(x,y,[0 1])
+
+v0=[n*(px(2)-px(1)) n*(py(2)-py(1))];
+v1=[n*(px(5)-px(4)) n*(py(5)-py(4))];
+quiver(px(1),py(1),v0(1),v0(2));
+quiver(px(5),py(5),v1(1),v1(2));
+
+%2. görbe
+rx=[px(5) -5 -15]; ry=[py(5) 20 15];
+plot(rx,ry,'*');
+t0=0;t1=1;t2=1.5;
+
+syms a3 a2 a1 a0
+x(t)= a3 * t^3 + a2* t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2* t^2 + a1 * t + a0;
+%k=1/2;
+k=1;
+
+xd(t)=diff(x,t);
+yd(t)=diff(x,t);
+
+eq=[x(t0)==rx(1);...
+    x(t1)==rx(2);...
+    x(t2)==rx(3);...
+    xd(t0)==k*v1(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)= m.a3*t^3 + m.a2* t^2 + m.a1 * t + m.a0;
+
+eq=[y(t0)==ry(1);...
+    y(t1)==ry(2);...
+    y(t2)==ry(3);...
+    yd(t0)==k*v1(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)= m.a3*t^3 + m.a2* t^2 + m.a1 * t + m.a0;
+
+fplot(x,y,[t0 t2]);
+
+17.
+
+clear
+px=[10 20 40 50 20];py=[20 40 40 20 10];
+plot(px,py,'*');
+axis equal; axis([5 55 5 45]); hold on;
+syms t;
+n=4;
+x(t)=t*0;
+y(t)=t*0;
+for i=0:n
+    bin(t)= nchoosek(n,i) * t^i * (1-t)^(n-i);
+    x(t)=x(t)+px(i+1)*bin(t);
+    y(t)=y(t)+py(i+1)*bin(t);
+end
+fplot(x,y,[0 1])
+
+v0=[n*(px(2)-px(1)) n*(py(2)-py(1))];
+v1=[n*(px(5)-px(4)) n*(py(5)-py(4))];
+quiver(px(1),py(1),v0(1),v0(2));
+quiver(px(5),py(5),v1(1),v1(2));
+
+%2. görbe
+rx=[20 20]; ry=[10 -40];
+plot(rx,ry,'*');
+v0=[-60 -20];v1=[60 0];
+t0=0;t1=1;
+
+syms a3 a2 a1 a0;
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd=diff(x,t);
+yd=diff(y,t);
+
+eq=[x(t0)==rx(1);...
+    x(t1)==rx(2);...
+    xd(t0)==v0(1);...
+    xd(t1)==v0(2)];
+
+m=solve(eq, [a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0],[m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==ry(1);...
+    y(t1)==ry(2);...
+    yd(t0)==v1(1);...
+    yd(t1)==v1(2)];
+
+m=solve(eq, [a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0],[m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t1]);
+
+18.
+
+clear
+px=[3 4 5]; py=[0 2 -2];
+v0=[1 2];
+t0=-1;t1=0.2;t2=1.3;
+plot(px,py,'*'); 
+axis ([1 7 -4 4]); axis equal; hold on;
+quiver(px(1),py(1),v0(1),v0(2));
+
+syms a3 a2 a1 a0 t;
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd=diff(x,t);
+yd=diff(y,t);
+
+eq=[x(t0)==px(1);
+    x(t1)==px(2);
+    x(t2)==px(3);
+    xd(t0)==v0(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0],[m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==py(1);
+    y(t1)==py(2);
+    y(t2)==py(3);
+    yd(t0)==v0(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0],[m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t2]);
+
+19.
+
+clear
+rx=[-3 -2 1 2];ry=[4 1 2 0];
+plot(rx,ry,"*--");
+axis ([-5 7 -4 6]); axis equal; hold on;
+n=3;
+syms t;
+x(t)=0*t;
+y(t)=0*(t);
+for i=0:n
+    bin(t)=nchoosek(n,i) * t^i * (1-t)^(n-i);
+    x(t)= x(t) + rx(i+1) * bin(t);
+    y(t)= y(t) + ry(i+1) * bin(t);
+end
+fplot(x,y,[0 1]);
+
+px=[rx(4) 4 5]; py=[ry(4) 2 -2]; v0=[n*(rx(4)-rx(3)) n*(ry(4)-ry(3))];
+
+% xd(t)=diff(x,t);
+% yd(t)=diff(y,t);
+% v0=[xd(1) yd(1)];
+
+t0=-1;t1=0.2;t2=1.3;
+plot(px,py,'*'); 
+axis ([1 7 -4 4]); axis equal; hold on;
+quiver(px(1),py(1),v0(1),v0(2));
+
+syms a3 a2 a1 a0 t;
+
+x(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+y(t)= a3 * t^3 + a2 * t^2 + a1 * t + a0;
+xd=diff(x,t);
+yd=diff(y,t);
+
+eq=[x(t0)==px(1);
+    x(t1)==px(2);
+    x(t2)==px(3);
+    xd(t0)==v0(1)];
+m=solve(eq,[a3 a2 a1 a0]);
+x(t)=subs(x,[a3 a2 a1 a0],[m.a3 m.a2 m.a1 m.a0]);
+
+eq=[y(t0)==py(1);
+    y(t1)==py(2);
+    y(t2)==py(3);
+    yd(t0)==v0(2)];
+m=solve(eq,[a3 a2 a1 a0]);
+y(t)=subs(y,[a3 a2 a1 a0],[m.a3 m.a2 m.a1 m.a0]);
+
+fplot(x,y,[t0 t2]);
+
+20.
+
+clear
+px=[10 20 40 50 20];py=[20 40 40 20 10];
+plot(px,py,'*');
+axis equal; axis([5 55 5 45]); hold on;
+t0=0; t1=1; t2=2; t3=3; t4=4;
+
+21.
+
+clear
+px=[10 20 40 50 20];py=[20 40 40 20 10];
+plot(px,py,'*');
+axis equal; axis([5 55 5 45]); hold on;
+syms t;
+n=4;
+x(t)=t*0;
+y(t)=t*0;
+for i=0:n
+    bin(t)= nchoosek(n,i) * t^i * (1-t)^(n-i);
+    x(t)=x(t)+px(i+1)*bin(t);
+    y(t)=y(t)+py(i+1)*bin(t);
+end
+fplot(x,y,[0 1])
+
+v0=[n*(px(2)-px(1)) n*(py(2)-py(1))];
+v1=[n*(px(5)-px(4)) n*(py(5)-py(4))];
+quiver(px(1),py(1),v0(1),v0(2));
+quiver(px(5),py(5),v1(1),v1(2));
+
+%2. görbe
+m=5;
+rx=[px(5) px(5)+n/m*(px(5)-px(4)) -20 30 20 40]; ry=[py(5) py(5)+n/m*(py(5)-py(4)) -20 -30 -45 -10];
+plot(rx,ry,'*');
+x(t)=t*0;
+y(t)=t*0;
+for i=0:m
+    bin(t)= nchoosek(m,i) * t^i * (1-t)^(m-i);
+    x(t)=x(t)+rx(i+1)*bin(t);
+    y(t)=y(t)+ry(i+1)*bin(t);
+end
+fplot(x,y,[0 1])
